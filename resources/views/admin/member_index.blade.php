@@ -1,7 +1,7 @@
 @extends('layouts.template')
 
 @section('title')
-Anggota
+Anggota | Admin
 @endsection
 
 @section('content')

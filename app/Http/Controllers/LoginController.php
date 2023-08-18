@@ -16,7 +16,7 @@ class LoginController extends Controller
             if ($role->role === 'admin') {
                 return redirect()->route('admin_dashboard_index');
             } else {
-                dd('sek sabar');
+                return redirect()->route('user_meeting_index');
             }
         }
         
@@ -39,7 +39,7 @@ class LoginController extends Controller
             if ($role === "admin") {
                 return redirect()->route("admin_dashboard_index")->with("success", "Login Berhasil!");
             } else {
-                dd("sabar!");
+                return redirect()->route("user_meeting_index")->with("success", "Login Berhasil!");
             }
         }
 

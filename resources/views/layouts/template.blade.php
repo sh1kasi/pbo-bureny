@@ -20,7 +20,9 @@
     <link href="{{ asset('template') }}/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="{{ asset('template') }}/plugins/font-awesome/css/all.min.css" rel="stylesheet">
     <link href="{{ asset('template') }}/plugins/perfectscroll/perfect-scrollbar.css" rel="stylesheet">
-    <script src="{{ asset('template') }}/plugins/toastr/toastr.min.css"></script>
+    <script src="{{ asset('template') }}/plugins/toastr/toastr.min.js"></script>
+    <link rel="stylesheet" href="{{ asset('template') }}/plugins/toastr/toastr.css">
+
     <link href="{{ asset('template') }}/plugins/apexcharts/apexcharts.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ asset('template') }}/plugins/DataTables/css/jquery.dataTables.css">
 
@@ -177,6 +179,7 @@ crossorigin='anonymous'></script>"></script> --}}
                 <li class="sidebar-title">
                     Utama
                 </li>
+                @if (auth()->user()->role === 'admin')    
                 <li class="@if(Route::current()->getName() === "dashboard_index") active-page @endif">
                     <a href="{{ route('admin_dashboard_index') }}"><i data-feather="home"></i>Dashboard</a>
                 </li>
@@ -187,6 +190,11 @@ crossorigin='anonymous'></script>"></script> --}}
                 <li class="@if(Route::current()->getName() === "admin_user_index") active-page @endif">
                     <a href="{{ route('admin_user_index') }}"><i data-feather="users"></i>Master Anggota</a>
                 </li>
+                @else
+                <li class="@if(request()->is('rapat*')) active-page @endif">
+                  <a href="{{ route('user_meeting_index') }}"><i data-feather="book-open"></i>Absen Rapat</a>
+                </li>
+                @endif
                 
             </ul>
         </div>
@@ -200,12 +208,13 @@ crossorigin='anonymous'></script>"></script> --}}
     <script src="{{ asset('template') }}/plugins/jquery/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" charset="utf8" src="{{ asset('template') }}/plugins/dataTables/js/jquery.dataTables.js"></script>
     <script src="{{ asset('template') }}/plugins/popper/popper.min.js"></script>
-    <script src="{{ asset('template') }}/plugins/toastr/toastr.min.js"></script>
+    {{-- <script src="{{ asset('template') }}/plugins/toastr/toastr.min.js"></script> --}}
     <script src="{{ asset('template') }}/plugins/bootstrap/js/bootstrap.min.js"></script>
     <script src="{{ asset('template') }}/plugins/unpkg/feather-icons.min.js"></script>
     <script src="{{ asset('template') }}/plugins/perfectscroll/perfect-scrollbar.min.js"></script>
     <script src="{{ asset('template') }}/plugins/apexcharts/apexcharts.min.js"></script>
     <script src="{{ asset('template') }}/js/main.min.js"></script>
+    <script src="{{ asset('template') }}/plugins/sweet_alert/sweet_alert.js"></script>
     <script src="{{ asset('template') }}/js/pages/dashboard.js"></script>
     <script src="{{ asset('template') }}/js/pages/datatables.js"></script>
     <script src="{{ asset('template') }}/plugins/timepicker/js/timepicker.min.js"></script>
@@ -213,7 +222,7 @@ crossorigin='anonymous'></script>"></script> --}}
     {{-- <script src="{{ asset('template') }}/plugins/air-datepicker/js/i18n/datepicker.id.min.js"></script> --}}
 
 
-  <script>
+  <script>  
     
 
     $(document).ready(function () {

@@ -2,12 +2,15 @@
 
 @section('content')
 
+
 <style>
     .clock-timepicker {
         width: 100%;
     }
 
 </style>
+
+{{-- @dd(session('failed')) --}}
 
 <div class="page-content">
     <div class="main-wrapper">
@@ -59,7 +62,7 @@
                                             {{ $message }}
                                         </div>
                                         @enderror
-                                        <input type="date" class="form-control time" value="{{  old('sampai_jam') }}"
+                                        <input type="text" class="form-control time" value="{{  old('sampai_jam') }}"
                                             name="sampai_jam" id="timepicker2" placeholder="Tanggal Rapat">
                                     </div>
                                 </div>
@@ -74,6 +77,12 @@
         </div>
     </div>
 </div>
+
+@if (Session::has('failed'))
+        <script>
+            toastr.error('{!! session("failed") !!}', "Gagal")
+        </script>
+@endif
 
 <script>
     

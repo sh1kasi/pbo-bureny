@@ -3,10 +3,11 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Meeting;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -24,6 +25,10 @@ class User extends Authenticatable
     protected $table = 'users';
     protected $guarded = [];
 
+    public function meetings()
+    {
+        return $this->belongsToMany(Meeting::class, 'user_meeting')->withPivot('id', 'user_id');
+    }
 
     /**
      * The attributes that should be hidden for serialization.

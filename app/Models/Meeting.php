@@ -2,10 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Meeting extends Model
 {
     use HasFactory;
+
+    protected $table = 'meetings';
+    protected $guarded = [];
+
+    public function users() {
+       return $this->belongsToMany(User::class, 'user_meeting', 'meeting_id', 'user_id')->withPivot('id', 'status', 'alasan');
+    }
 }
