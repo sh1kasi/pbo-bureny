@@ -27,7 +27,7 @@ class User extends Authenticatable
 
     public function meetings()
     {
-        return $this->belongsToMany(Meeting::class, 'user_meeting')->withPivot('id', 'user_id');
+        return $this->belongsToMany(Meeting::class)->withPivot('id', 'user_id')->withPivot('id', 'status', 'alasan', 'user_id');
     }
 
     /**

@@ -38,7 +38,12 @@ Route::group(['middleware' => ['auth', 'cekRole:admin']], function() {
         Route::post("/admin/rapat/tambah/store", [MeetingController::class, "create_store"])->name('admin_create_meeting_store');
         Route::post("/admin/rapat/edit/store/{id}", [MeetingController::class, "edit_store"])->name('admin_edit_meeting_store');
         Route::post("/admin/rapat/delete/{id}", [MeetingController::class, "delete"])->name('admin_meeting_delete');
+
+
         
+        Route::get("/admin/rapat/detail/{id}", [MeetingController::class, "detail_meeting"])->name('detail_meeting');
+        Route::get("/admin/rapat/detail/json/{id}", [MeetingController::class, "detail_meeting_data"])->name('detail_meeting_data');
+
         Route::get("/admin/anggota", [UserController::class, "index"])->name('admin_user_index');
         
                 // Datatables
@@ -52,7 +57,10 @@ Route::group(['middleware' => ['auth', 'cekRole:user']], function() {
         // View
         Route::get('/rapat', [MeetingController::class, 'user_index'])->name('user_meeting_index');
 
-        Route::post('/rapat/store', [MeetingController::class, 'user_store'])->name('user_meeting_store');
+        Route::get('/absen/rapat/{id}', [MeetingController::class, 'presence_user'])->name('presence_user');
+        Route::post('/rapat/store/{id}', [MeetingController::class, 'user_store'])->name('user_meeting_store');
+
+
 
         // Datatables
         Route::get('/rapat/json', [MeetingController::class, 'user_meeting_data'])->name('user_meeting_data');

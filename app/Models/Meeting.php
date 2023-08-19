@@ -14,6 +14,7 @@ class Meeting extends Model
     protected $guarded = [];
 
     public function users() {
-       return $this->belongsToMany(User::class, 'user_meeting', 'meeting_id', 'user_id')->withPivot('id', 'status', 'alasan');
+        // dd($this->belongsToMany(User::class, 'user_meeting', 'meeting_id', 'user_id')->withPivot('id', 'status', 'alasan')->get());
+       return $this->belongsToMany(User::class, 'meeting_user', 'meeting_id', 'user_id')->withPivot('id', 'status', 'alasan');
     }
 }

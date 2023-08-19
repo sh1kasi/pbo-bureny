@@ -20,6 +20,7 @@
                                                 <th>Nama Rapat</th>
                                                 <th>Tanggal/Jam Rapat</th>
                                                 <th>Pembuat</th>
+                                                <th>Status</th>
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>
@@ -32,8 +33,6 @@
             </div>
         </div>
     </div>
-
-    @include('user.modal.absences_user_modal')
 
     <script>
         $(document).ready(function () {
@@ -63,13 +62,17 @@
                     name: "pembuat"
                 },
                 {
+                    data: "status",
+                    name: "status"
+                },
+                {
                     data: "action",
                     name: "Paction"
                 },
             ],
-            columnDefs: [
-                {className: 'd-flex justify-content-center', targets:4}
-            ]
+            // columnDefs: [
+            //     {className: 'd-flex justify-content-center', targets:4}
+            // ]
             });
         });
     </script>

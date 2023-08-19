@@ -1,21 +1,19 @@
-<form method="post" id="absenForm">
+<form method="post" action="{{ route('user_meeting_store', $id)  }}" id="absenForm">
     @csrf
     <div class="modal fade" id="absenceMeeting" tabindex="-1" role="dialog" aria-labelledby="absenceMeetingLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="absenceMeetingLabel">Absen Rapat</h5>
+                    <h5 class="modal-title" id="absenceMeetingLabel">Izin Rapat</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p id="judul_rapat"></p>
-                    <p id="waktu"></p>
-                    <p id="pembuat"></p>
+                    <p class="alert alert-warning">Harap isi alasan untuk tidak mengikuti rapat!</p>
                     <hr>
                     <div class="absen">
-                        <div class="form d-flex justify-content-around">
+                        {{-- <div class="form d-flex justify-content-around">
                             <div class="form-group form-check">
                                 <label class="form-check-label" for="izin">Hadir</label>
                                 <input class="form-check-input" type="radio" name="status" value="1" id="izin">
@@ -24,23 +22,45 @@
                                 <label class="form-check-label" for="izin">Izin</label>
                                 <input class="form-check-input" type="radio" name="status" value="0" id="izin">
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="form-group text-box">
                             <label class="font-weight-bold" for="alasan">Alasan</label>
-                            <input class="form-control" name="alasan" type="text" id="alasan">
+                            <input class="form-control" name="alasan" type="text" id="alasan_form">
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" id="submit" class="btn btn-primary w-100">Simpan Data</button>
+                    <button id="submit" type="button" class="btn btn-primary w-100">Simpan Data</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <input type="hidden" name="id" id="id">
+    {{-- <input type="hidden" name="status" id="status2"> --}}
 
 </form>
+
+<script>
+    $(document).ready(function () {
+        // $("#presence_form").submit();
+        $("#submit").prop("disabled", true);
+        $("#alasan_form").keyup(function (e) { 
+            if ($(this).val().length != 0) {
+                $("#submit").prop("disabled", false);
+            } else {
+                 $("#submit").prop("disabled", true);
+            }
+        });
+        
+        $("#status").val(0);
+        $('#submit').click(function (e) { 
+            console.log("aaaa");
+            e.preventDefault();
+            $("#alasan").val($("#alasan_form").val());
+            $("#presence_form").submit();
+        });
+    });
+</script>
 
 {{-- @if (session('status') == 400)
     <script>
@@ -66,7 +86,7 @@
     </script>
 @endif --}}
 
-<script>
+{{-- <script>
     function absenceMeeting(name, date, id, start, end, creator, data, alasan, telat) {
         $(document).ready(function () {
             if (data == 1) {
@@ -168,8 +188,4 @@
         });
     }
 
-    $(document).ready(function () {
-        $("#absenForm").attr("action", "{{ route('user_meeting_store') }}");
-    });
-
-</script>
+</script> --}}

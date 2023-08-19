@@ -13,10 +13,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_meeting', function (Blueprint $table) {
+        Schema::create('meeting_user', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(User::class)->references('id')->on('users');
-            $table->foreignIdFor(Meeting::class)->references('id')->on('meetings');
+            // $table->string('user_id');
+            $table->foreignId('user_id')->references('id')->on('users');
+            // $table->string('meeting_id');
+            $table->foreignId('meeting_id')->references('id')->on('meetings');
             $table->enum('status', [1, 0])->comment("1 = Hadir | 0 = Tidak Hadir");
             $table->string('alasan')->nullable();
             $table->timestamps();

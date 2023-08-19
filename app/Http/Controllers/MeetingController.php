@@ -29,9 +29,9 @@ class MeetingController extends Controller
             ->addColumn('tanggal', function($row) {
                 return $row->tanggal . " (" .$row->dari_jam . " - " . $row->sampai_jam . ")";
             })
-            ->addColumn('action', function($row) {
+            ->editColumn('action', function($row) {
                 return "
-                        <a href='/admin/rapat/detail/". $row->id ."'> <button class='btn btn-primary'><i class='fa fa-info-circle'></i></button></a>
+                        <a href='". route('detail_meeting', $row->id) ."'> <button class='btn btn-primary'><i class='fa fa-info-circle'></i></button></a>
                         <button class='btn btn-warning' onclick='modalEditMeeting(" . '"'.$row->name. '"' . ", ".'"'.$row->tanggal.'"'.", ".'"'. $row->id .'"'.",   ".'"'.$row->dari_jam.'"'.", ".'"'.$row->sampai_jam.'"'.")' data-bs-toggle='modal' data-bs-target='#editMeeting'><i class='fa fa-lg fa-edit'></i></button>
                         <button class='btn btn-danger' onclick='deleteMeeting(" . $row->id . ", ".'"'.$row->name.'"'.")'><i class='fa fa-trash'></i></button>
                        ";
@@ -129,6 +129,34 @@ class MeetingController extends Controller
 
             return redirect()->route('admin_meeting_index')->with('success', 'Berhasil menghapus rapat');
         }
+
+        public function detail_meeting($id) {
+            $meeting = Meeting::find($id);
+
+            return view('admin.detail_meeting_index', compact('meeting', 'id'));
+        }
+
+        public function detail_meeting_data($id) {
+            $meeting = Meeting::find($id);
+            $user_meeting = $meeting->users()->get();
+            
+            return datatables($user_meeting)
+            ->addColumn('name', function($row) {
+                $user = User::where('id', $row->pivot->user_id)->first();
+                return $user->name;
+            })
+            ->addColumn('status', function($row) {
+                if ($row->pivot->status == 1) {
+                    return "<span class='alert alert-success'>Hadir</span>";
+                } else {
+                    return "<span class='alert alert-warning'>Izin (" . $row->pivot->alasan . ")</span>";
+                }
+            })
+            ->addIndexColumn()
+            ->escapeColumns([])
+            ->make(true);
+
+        }
     // End of Admin Side
 
     // User Side
@@ -143,44 +171,36 @@ class MeetingController extends Controller
             ->addColumn('tanggal', function($row) {
                 return Carbon::parse($row->tanggal)->translatedFormat('j F Y') . " (" .$row->dari_jam . " - " . $row->sampai_jam . ")";
             })
-            ->addColumn('action', function($row) {
+            ->addColumn('status', function($row) {
+                $data = $row->users()->wherePivot('user_id', auth()->user()->id)->first();
+                // dd($data);
+                // return $data->pivot->status;
+                if ($data == null) {
+                    return "<p class='text-center'>-</p>";
+                } elseif ($data->pivot->status == 1) {
+                    return "<p class='alert alert-success text-center'>Hadir</p>";
+                } elseif ($data->pivot->status == 0) {
+                    return "<p class='alert alert-warning text-center'>Izin (" .$data->pivot->alasan . ")</p>";
+                }
+            })
+            ->editColumn('action', function($row) {
+
                 $data = $row->users()->wherePivot('user_id', auth()->user()->id)->first();
 
-                $now = Carbon::now();
+                // return is_null($data);
 
-                $test_carbon = $now->between(Carbon::parse($row->dari_jam), Carbon::parse($row->sampai_jam)->addHour(2));
-
-                if ($row->tanggal == $now->format("Y-m-d") && $test_carbon ) {
-                    
-                        if ($data == null) {
-                            return "
-                                    <button class='btn btn-success' data-bs-target='#absenceMeeting' data-bs-toggle='modal' onclick='absenceMeeting(" . '"'.$row->name. '"' . ", ".'"'.Carbon::parse($row->tanggal)->translatedFormat("j F Y").'"'.", ".'"'. $row->id .'"'.",   ".'"'.$row->dari_jam.'"'.", ".'"'.$row->sampai_jam.'"'.", ".'"'.$row->pembuat.'"'.", ".'"Kosong"'.", ".'"'.false.'"'.")'>Absen</button>
-                                   ";
-                        }
-                        if ($data->pivot->status == 1) {
-                            return "
-                                    <button class='btn btn-success' data-bs-target='#absenceMeeting' data-bs-toggle='modal' onclick='absenceMeeting(" . '"'.$row->name. '"' . ", ".'"'.Carbon::parse($row->tanggal)->translatedFormat("j F Y").'"'.", ".'"'. $row->id .'"'.",   ".'"'.$row->dari_jam.'"'.", ".'"'.$row->sampai_jam.'"'.", ".'"'.$row->pembuat.'"'.", ".'"'.$data->pivot->status.'"'.", ".'"'.$data->pivot->alasan.'"'.", ".'"'.false.'"'.")'><i class='fa fa-check'></i></button>
-                                   ";
-                        } elseif ($data->pivot->status == 0) {
-                            return "
-                                    <button class='btn btn-warning' data-bs-target='#absenceMeeting' data-bs-toggle='modal' onclick='absenceMeeting(" . '"'.$row->name. '"' . ", ".'"'.Carbon::parse($row->tanggal)->translatedFormat("j F Y").'"'.", ".'"'. $row->id .'"'.",   ".'"'.$row->dari_jam.'"'.", ".'"'.$row->sampai_jam.'"'.", ".'"'.$row->pembuat.'"'.", ".'"'.$data->pivot->status.'"'.", ".'"'.$data->pivot->alasan.'"'.", ".'"'.false.'"'.")'><i class='fa fa-x-twitter'></i></button>
-                                   ";
-                        }
+                
+                if (!is_null($data)) {
+                    // dd("a");
+                    return "
+                            <a href='".route('presence_user', $row->id)."'><button class='btn btn-secondary' disabled><i class='fa fa-check'></i> Absen</button></a>
+                           ";
                 } else {
-                    if ($data == null) {
-                        return "
-                                <button class='btn btn-warning' data-bs-target='#absenceMeeting' data-bs-toggle='modal' onclick='absenceMeeting(" . '"'.$row->name. '"' . ", ".'"'.Carbon::parse($row->tanggal)->translatedFormat("j F Y").'"'.", ".'"'. $row->id .'"'.",   ".'"'.$row->dari_jam.'"'.", ".'"'.$row->sampai_jam.'"'.", ".'"'.$row->pembuat.'"'.", ".'"d"'.", ".'"kosong"'.", ".'"'.true.'"'.")'>Absen</button>
-                               ";
-                    }
-                    if ($data->pivot->status == 1) {
-                        return "
-                                <button class='btn btn-success' data-bs-target='#absenceMeeting' data-bs-toggle='modal' onclick='absenceMeeting(" . '"'.$row->name. '"' . ", ".'"'.Carbon::parse($row->tanggal)->translatedFormat("j F Y").'"'.", ".'"'. $row->id .'"'.",   ".'"'.$row->dari_jam.'"'.", ".'"'.$row->sampai_jam.'"'.", ".'"'.$row->pembuat.'"'.", ".'"'.$data->pivot->status.'"'.", ".'"'.$data->pivot->alasan.'"'.", ".'"'.false.'"'.")'><i class='fa fa-check'></i></button>
-                               ";
-                    } elseif ($data->pivot->status == 0) {
-                        return "
-                                <button class='btn btn-warning' data-bs-target='#absenceMeeting' data-bs-toggle='modal' onclick='absenceMeeting(" . '"'.$row->name. '"' . ", ".'"'.Carbon::parse($row->tanggal)->translatedFormat("j F Y").'"'.", ".'"'. $row->id .'"'.",   ".'"'.$row->dari_jam.'"'.", ".'"'.$row->sampai_jam.'"'.", ".'"'.$row->pembuat.'"'.", ".'"'.$data->pivot->status.'"'.", ".'"'.$data->pivot->alasan.'"'.", ".'"'.false.'"'.")'><i class='fa fa-check'></i></button>
-                               ";
-                    } 
+                    return "
+                            <a href='".route('presence_user', $row->id)."'><button class='btn btn-primary'><i class='fa fa-check'></i> Absen </button></a>
+                           ";
+                            // dd('b');
+
                 }
 
                 
@@ -190,23 +210,32 @@ class MeetingController extends Controller
             ->make(true);
         }
 
-        public function user_store(Request $request) {
-            $user = User::find(auth()->user()->id);
-            $meeting = Meeting::find($request->id);
+        public function presence_user($id) {
+            $meeting = Meeting::find($id);
+            return view('user.absences_meeting', compact("meeting", "id"));
+        }
 
-            $validator = Validator::make($request->all(), [
-                'status' => 'required',
-                'alasan' => 'nullable',
-            ],[
-                'status.required' => 'Wajib pilih satu',
-                'alasan.required' => 'Alasan wajib diisi!'
-            ]);
+        public function user_store(Request $request, $id) {
+
+            // dd($request);
+            $user = User::find(auth()->user()->id);
+            $meeting = Meeting::find($id);
+
+
+
+        //     $validator = Validator::make($request->all(), [
+        //         'status' => 'required',
+        //         'alasan' => 'nullable',
+        //     ],[
+        //         'status.required' => 'Wajib pilih satu',
+        //         'alasan.required' => 'Alasan wajib diisi!'
+        //     ]);
 
             
 
-            if ($validator->fails()) {
-                return redirect()->back()->with('status', 400);
-            }
+        //     if ($validator->fails()) {
+        //         return redirect()->back()->with('status', 400);
+        //     }
             
             $user->meetings()->attach($meeting->id, ['status' => $request->status, 'alasan' => $request->alasan]);
             return redirect()->route('user_meeting_index')->with('success', 'Berhasil melakukan absen!');
