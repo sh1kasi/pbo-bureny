@@ -42,9 +42,12 @@
             var id = {{ $id }}
             $("#detailMeetingTable").DataTable({
                 processing: true,
-                // serverSide: true,
+                serverSide: true,
                 search: true,
                 filter: true,
+                language: {
+                    emptyTable: "Belum ada yang melakukan absen pada rapat ini",
+                },
                 ajax: {
                     type: "GET",
                     url: `{{ route('detail_meeting_data', $id) }}`

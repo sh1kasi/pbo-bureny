@@ -52,10 +52,27 @@
             }
         });
         
-        $("#status").val(0);
         $('#submit').click(function (e) { 
-            console.log("aaaa");
             e.preventDefault();
+
+            $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+            $.ajax({
+                type: "post",
+                url: "{{ route('user_meeting_store', $id) }}",
+                data: {
+                    status: "0",
+                    alasan: $("#alasan_form").val(),
+                },
+                dataType: "json",
+                success: function (response) {
+                }
+            });
+            $("#status").val("0");
             $("#alasan").val($("#alasan_form").val());
             $("#presence_form").submit();
         });

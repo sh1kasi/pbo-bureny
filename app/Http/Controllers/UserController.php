@@ -16,19 +16,40 @@ class UserController extends Controller
     }
 
     public function data() {
-        $user = User::get();
+        $user = User::where('id', '!=', auth()->user()->id)->where('role', 'user')->get();
         return datatables($user)
-        ->addColumn('action', function($row) {
+        ->editColumn('action', function($row) {
             // $data = {'name' => $row->name, "tanggal"}
-            return "
-                        <a href='/admin/anggota/edit/". $row->id ."'> <button class='btn btn-warning'><i class='fa fa-edit'></i></button></a>
-                        <a href='/admin/anggota/delete/". $row->id ."'><button class='btn btn-danger'><i class='fa fa-trash'></i></button></a>
-                        <a href='/admin/anggota/detail/". $row->id ."'><button class='btn btn-primary'><i class='fa fa-lg fa-info-circle'></i></button></a>
-                    ";
+            if (auth()->user()->role === 'super_admin') {
+                return "
+                            <div class='d-flex gap-2'>    
+                                 <button class='btn btn-danger' type='button' onclick='user_delete(".$row->id.", ".'"'.route('user_delete', $row->id).'"'.")'><i class='fa fa-trash'></i></button>
+                                
+                                <button class='btn btn-sm btn-info' onclick='promote_user(".$row->id.", ".'"'.route('promote_to_admin', $row->id).'"'.")' type='submit'>Jadikan Admin</button>
+                            </div>
+                        ";
+            } else {
+                return "
+                            <button class='btn btn-danger' type='button' onclick='user_delete(".$row->id.", ".'"'.route('user_delete', $row->id).'"'.")'><i class='fa fa-trash'></i></button>
+                        ";
+            }
+            
         })
         ->escapeColumns([])
         ->addIndexColumn()
         ->make(true);
+    }
+
+    public function delete_user($id, Request $request) {
+        User::find($id)->delete();
+        return redirect()->back()->with('success', 'Berhasil menghapus data');
+    }
+
+    public function promote_user($id, Request $request) {
+        $user = User::find($id);
+        $user->role = 'admin';
+        $user->save();
+        return redirect()->back()->with('success', 'Berhasil mengubah role user');
     }
 
 }

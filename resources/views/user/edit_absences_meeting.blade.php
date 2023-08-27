@@ -29,23 +29,25 @@ Absen Rapat | {{ $meeting->name }}
                                 
                             @endphp
 
-                            <form action="{{ route('user_meeting_store', $id)  }}" id="presence_form" method="post">
+                            <form action="{{ route('edit_user_meeting_store', $id)  }}" id="presence_form" method="post">
                                 @csrf
                                 <input type="hidden" name="status" id="status">
                                 <input type="hidden" name="alasan" id="alasan">
                                 <input type="hidden" name="token" id="token">
                             </form>
-                                <div class="form d-flex justify-content-evenly">
+                                <div class="form d-flex justify-content-center">
                                     <div class="form-group form-check">
+
                                         @if ($meeting->tanggal == $now->format("Y-m-d") && $check)
+                                        
                                             <button class="btn btn-success btn-lg" value="1" id="absen-btn">Absen</button>
                                         @else
                                             <button class="btn btn-secondary btn-lg" disabled value="1" id="absen-btn">Absen</button>
                                         @endif
                                     </div>
-                                    <div class="form-group form-check">
-                                        <button class="btn btn-warning btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#absenceMeeting" id="izin-btn">Izin</button>
-                                    </div>
+                                    {{-- <div class="form-group form-check">
+                                        <button class="btn btn-warning btn-lg" {{ $meetingPivot->status == 1 || $meetingPivot->status == 0 ? "disabled" : "" }} type="button" data-bs-toggle="modal" data-bs-target="#absenceMeeting" id="izin-btn">Izin</button>
+                                    </div> --}}
                                 </div>
                         </div>
                     </div>

@@ -24,6 +24,7 @@ Rapat | Admin
                                         <th>Nama Rapat</th>
                                         <th>Tanggal/Jam Rapat</th>
                                         <th>Pembuat</th>
+                                        <th>token</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -74,6 +75,10 @@ Rapat | Admin
                     name: "pembuat"
                 },
                 {
+                    data: "token",
+                    name: "token"
+                },
+                {
                     data: "action",
                     name: "action"
                 },
@@ -82,11 +87,14 @@ Rapat | Admin
             serverSide: true,
             filter: true,
             searching: true,
+            language: {
+                emptyTable: "Data kosong",
+            },
         });
 
     });
 
-    function deleteMeeting(id, name) {
+    function deleteMeeting(id, name, url) {
         $(document).ready(function () {
             Swal.fire({
                 title: 'Anda yakin?',
@@ -98,7 +106,7 @@ Rapat | Admin
                 confirmButtonText: 'Hapus!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    $("#form_delete").attr("action", `/admin/rapat/delete/${id}`);
+                    $("#form_delete").attr("action", url);
                     Swal.fire(
                         'Terhapus!',
                         `Rapat ${name} berhasil terhapus.`,

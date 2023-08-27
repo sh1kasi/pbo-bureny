@@ -40,9 +40,20 @@
                                         {{ $message }}
                                     </div>
                                     @enderror
-                                    <input type="date" class="form-control data full datedropper picker-input" name="tanggal"
+                                    <input type="text" class="form-control data full datedropper picker-input" name="tanggal"
                                      id="date-input" placeholder="Tanggal Rapat" value="{{ old('tanggal') }}">
                                      
+                                </div>
+                                <div class="form-group w-25 mt-3">
+                                    <label for="token_rapat">Token Rapat</label>
+                                    @error('token')
+                                    <div class="text-danger mt-1">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                    <input type="text" class="form-control" oninput="this.value = this.value.toUpperCase()" name="token" value="{{  old('token') }}"
+                                        id="token" aria-describedby="emailHelp"
+                                        placeholder="Masukkan token rapat">
                                 </div>
                                 <div class="jam row">
                                     <div class="form-group w-25 date mt-3 col-sm">
@@ -52,7 +63,7 @@
                                             {{ $message }}
                                         </div>
                                         @enderror
-                                        <input type="text" class="form-control time" value="{{  old('dari_jam') }}"
+                                        <input type="time" class="form-control time" value="{{  old('dari_jam') }}"
                                             name="dari_jam" id="timepicker1" placeholder="Tanggal Rapat">
                                     </div>
                                     <div class="form-group w-25 date mt-3 col-sm">
@@ -62,7 +73,7 @@
                                             {{ $message }}
                                         </div>
                                         @enderror
-                                        <input type="text" class="form-control time" value="{{  old('sampai_jam') }}"
+                                        <input type="time" class="form-control time" value="{{  old('sampai_jam') }}"
                                             name="sampai_jam" id="timepicker2" placeholder="Tanggal Rapat">
                                     </div>
                                 </div>
@@ -86,19 +97,27 @@
 
 <script>
     
-    
-    
     $(document).ready(function () {
+        $("#date-input").daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            minYear: parseInt(moment().format('YYYY')),
+            minDate: moment().format('L'),
+        });
+    });
+    
+    
+    // $(document).ready(function () {
 
 
-        $("#timepicker1").clockTimePicker({
-            autosize: false,
+    //     $("#timepicker1").clockTimePicker({
+    //         autosize: false,
 
-        });
-        $("#timepicker2").clockTimePicker({
-            autosize: false,
-        });
-        });
+    //     });
+    //     $("#timepicker2").clockTimePicker({
+    //         autosize: false,
+    //     });
+    //     });
     
 
     // new AirDatePicker('#datepicker');

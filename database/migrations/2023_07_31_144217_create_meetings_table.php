@@ -18,6 +18,7 @@ return new class extends Migration
             $table->time("dari_jam");
             $table->time("sampai_jam");
             $table->string("pembuat");
+            $table->string("token");
             $table->timestamps();
         });
     }

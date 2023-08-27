@@ -67,7 +67,7 @@
                 },
                 {
                     data: "action",
-                    name: "Paction"
+                    name: "action"
                 },
             ],
             // columnDefs: [

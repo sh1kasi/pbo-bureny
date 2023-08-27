@@ -11,9 +11,11 @@ class LoginController extends Controller
 {
     public function index() {
 
+        // dd(auth()->user()->role);
+
         if (!empty(auth()->user()->id)) {
             $role = User::find(auth()->user()->id);
-            if ($role->role === 'admin') {
+            if ($role->role === 'admin' || $role->role === 'super_admin') {
                 return redirect()->route('admin_dashboard_index');
             } else {
                 return redirect()->route('user_meeting_index');
@@ -36,7 +38,7 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $role = auth()->user()->role;
-            if ($role === "admin") {
+            if ($role === "admin" || $role === "super_admin") {
                 return redirect()->route("admin_dashboard_index")->with("success", "Login Berhasil!");
             } else {
                 return redirect()->route("user_meeting_index")->with("success", "Login Berhasil!");
