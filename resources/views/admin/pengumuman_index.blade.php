@@ -14,7 +14,7 @@
                             </div>
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="pengumumanTable">
-                                    <thead class="bg-secondary text-dark">
+                                    <thead class="">
                                         <tr>
                                             <td>No</td>
                                             <td>Pesan</td>

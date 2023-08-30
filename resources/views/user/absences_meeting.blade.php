@@ -82,7 +82,7 @@ Absen Rapat | {{ $meeting->name }}
                         </div> --}}
                         <div class="form-group text-box">
                             <label class="font-weight-bold" for="token">Token Rapat</label>
-                            <input class="form-control" name="token" type="text" id="token_form">
+                            <input class="form-control" oninput="this.value = this.value.toUpperCase()" name="token" type="text" id="token_form">
                         </div>
                     </div>
                 </div>

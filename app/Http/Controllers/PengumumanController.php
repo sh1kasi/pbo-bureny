@@ -26,7 +26,6 @@ class PengumumanController extends Controller
         ->addColumn('aksi', function($row) {
             return "
                     <div class='d-flex justify-content-center gap-2'>
-                        <button class='btn btn-primary'><i class='fa fa-info-circle'></i></button>
                         <button class='btn btn-warning'><i class='fa fa-lg fa-edit'></i></button>
                     </div>
                    ";

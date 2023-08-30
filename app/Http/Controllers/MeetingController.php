@@ -45,7 +45,7 @@ class MeetingController extends Controller
                     return "
                             <div class='d-flex justify-content-center gap-2'>
                                 <a href='". route('detail_meeting', $row->id) ."'> <button class='btn btn-primary'><i class='fa fa-info-circle'></i></button></a>
-                                <button class='btn btn-warning' disabled onclick='modalEditMeeting(" . '"'.$row->name. '"' . ", ".'"'.$row->tanggal.'"'.", ".'"'.$row->token.'"'.", ".'"'. $row->id .'"'.",   ".'"'.$row->dari_jam.'"'.", ".'"'.$row->sampai_jam.'"'.", ".'"'.route('admin_edit_meeting_store', $row->id).'"'.")' data-bs-toggle='modal' data-bs-target='#editMeeting'><i class='fa fa-lg fa-edit'></i></button>
+                                <button class='btn btn-secondary' disabled onclick='modalEditMeeting(" . '"'.$row->name. '"' . ", ".'"'.$row->tanggal.'"'.", ".'"'.$row->token.'"'.", ".'"'. $row->id .'"'.",   ".'"'.$row->dari_jam.'"'.", ".'"'.$row->sampai_jam.'"'.", ".'"'.route('admin_edit_meeting_store', $row->id).'"'.")' data-bs-toggle='modal' data-bs-target='#editMeeting'><i class='fa fa-lg fa-edit'></i></button>
                                 <button class='btn btn-danger' onclick='deleteMeeting(" . $row->id . ", ".'"'.$row->name.'"'.", ".'"'.route('admin_meeting_delete', $row->id).'"'.")'><i class='fa fa-trash'></i></button>
                             </div>
                            ";

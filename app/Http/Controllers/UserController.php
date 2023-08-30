@@ -16,7 +16,11 @@ class UserController extends Controller
     }
 
     public function data() {
-        $user = User::where('id', '!=', auth()->user()->id)->where('role', 'user')->get();
+        if (auth()->user()->role === "super_admin") {
+            $user = User::where('id', '!=', auth()->user()->id)->get();
+        } else {
+            $user = User::where('id', '!=', auth()->user()->id)->where('role', 'user')->get();
+        }
         return datatables($user)
         ->editColumn('action', function($row) {
             // $data = {'name' => $row->name, "tanggal"}
